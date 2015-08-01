@@ -132,6 +132,11 @@ func (p *lastStatePlist) parse() error {
 	if err != nil {
 		return err
 	}
+	// if the file is not present, the file won't exist
+	// return without errors
+	if _, err := os.Stat(lastStatePlistPath); os.IsNotExist(err) {
+		return nil
+	}
 	f, err := os.Open(lastStatePlistPath)
 	if err != nil {
 		return err
