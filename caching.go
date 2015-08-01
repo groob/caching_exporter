@@ -26,38 +26,13 @@ var (
 		Name: "caching_reserved_volume_space",
 		Help: "ReservedVolumeSpace from Config.plist",
 	})
-	iOSSoftware = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_ios_software",
-		Help: "iOS Software cached.",
-	})
-	macSoftware = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_mac_software",
-		Help: "Mac Software cached.",
-	})
-	iCloud = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_icloud",
-		Help: "iCloud Data cached.",
-	})
-	books = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_books",
-		Help: "Books Data cached",
-	})
-	iTunesU = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_itunes",
-		Help: "iTunesU Data cached",
-	})
-	movies = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_movies",
-		Help: "Movies Data cached",
-	})
-	music = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_music",
-		Help: "Music Data cached",
-	})
-	other = prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "caching_other",
-		Help: "Other Data cached",
-	})
+	cachingData = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "caching_data",
+		Help: "data cached by server.",
+	},
+		[]string{
+			"type",
+		})
 
 	// LastState.plist metrics
 	active = prometheus.NewGauge(prometheus.GaugeOpts{
@@ -90,14 +65,7 @@ func init() {
 	// Config.plist metrics
 	prometheus.MustRegister(cacheSize)
 	prometheus.MustRegister(reservedVolumeSpace)
-	prometheus.MustRegister(iOSSoftware)
-	prometheus.MustRegister(macSoftware)
-	prometheus.MustRegister(iCloud)
-	prometheus.MustRegister(books)
-	prometheus.MustRegister(iTunesU)
-	prometheus.MustRegister(movies)
-	prometheus.MustRegister(music)
-	prometheus.MustRegister(other)
+	prometheus.MustRegister(cachingData)
 	// LastState.plist metrics
 	prometheus.MustRegister(active)
 	prometheus.MustRegister(peers)
@@ -198,14 +166,14 @@ func (p configPlist) setMetrics() error {
 	}
 	cacheSize.Set(float64(p.SavedCacheSize))
 	reservedVolumeSpace.Set(float64(p.ReservedVolumeSpace))
-	iOSSoftware.Set(float64(p.SavedCacheDetails.IOSSoftware))
-	macSoftware.Set(float64(p.SavedCacheDetails.MacSoftware))
-	iCloud.Set(float64(p.SavedCacheDetails.ICloud))
-	books.Set(float64(p.SavedCacheDetails.Books))
-	iTunesU.Set(float64(p.SavedCacheDetails.ITunesU))
-	movies.Set(float64(p.SavedCacheDetails.Movies))
-	music.Set(float64(p.SavedCacheDetails.Music))
-	other.Set(float64(p.SavedCacheDetails.Other))
+	cachingData.WithLabelValues("iOS Software").Set(float64(p.SavedCacheDetails.IOSSoftware))
+	cachingData.WithLabelValues("Mac Software").Set(float64(p.SavedCacheDetails.MacSoftware))
+	cachingData.WithLabelValues("iCloud").Set(float64(p.SavedCacheDetails.ICloud))
+	cachingData.WithLabelValues("Books").Set(float64(p.SavedCacheDetails.Books))
+	cachingData.WithLabelValues("iTunesU").Set(float64(p.SavedCacheDetails.ITunesU))
+	cachingData.WithLabelValues("Movies").Set(float64(p.SavedCacheDetails.Movies))
+	cachingData.WithLabelValues("Music").Set(float64(p.SavedCacheDetails.Music))
+	cachingData.WithLabelValues("Other").Set(float64(p.SavedCacheDetails.Other))
 
 	return nil
 }
