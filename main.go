@@ -60,6 +60,6 @@ func main() {
 	go monitor()
 
 	http.Handle("/metrics", prometheus.Handler())
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+*port, nil))
 
 }
