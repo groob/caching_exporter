@@ -1,4 +1,5 @@
-# caching exporter -> Expose OS X Caching Server metrics for collection by [Prometheus](prometheus.io)
+# caching exporter ->
+# Expose OS X Caching Server metrics for collection by [Prometheus](http://prometheus.io/)
 
 Caching exporter is modified version of [mtail](https://github.com/google/mtail) with several additions to collect metrics stored in a plist file.
 Caching Exporter collects metrics from the following locations: 
