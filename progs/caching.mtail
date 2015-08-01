@@ -1,0 +1,30 @@
+counter caching_parsed_log_lines
+counter caching_registrations
+counter caching_cleanups
+counter caching_requests by request_source, file_type
+counter caching_outgoing_full_requests
+
+/^(?P<date>\d+-\d+-\d+ \d+:\d+:\d+\.\d+)/{
+    strptime($date, "2006-01-02 15:04:05.000")
+    caching_parsed_log_lines++
+
+    # Registration
+    /(\bRegistration\b \bsucceeded\b\.)/ {
+    caching_registrations++
+    }
+
+    # Cleanup
+    /(\bCleanup\b \bsucceeded\b\.)/ {
+    caching_cleanups++
+    }
+    
+    # Requeests
+    /\#\w+ (Request by \"(?P<request_source>\w+\/\d+\.\d+)\" for http:\/\/).*\/\w+\.(?P<file_type>\w+$)/ {
+    caching_requests[$request_source][$file_type]++
+    }
+    
+    # outgoing full request
+    /\#\w+ ECAssetRequestor\[\w+\]\: (Issuing outgoing full request for URL http\:\/\/)/ {
+    caching_outgoing_full_requests++
+    }
+}
