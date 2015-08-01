@@ -18,7 +18,7 @@ counter caching_outgoing_full_request
     }
     
     # requests
-    /\#.* (Request by \"(?P<request_source>\w+\/\d+\.\d+)\" for http:\/\/).*\/[\w\.]+\.(?P<file_type>\w+$)/ {
+    /\#.* (Request by \"(?P<request_source>\w+\/\d+\.\d+)\" for http:\/\/).*\/[\w\.]+\.(?P<file_type>\w+)/ {
     caching_requests[$request_source][$file_type]++
     }
     
